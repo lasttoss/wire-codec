@@ -9,7 +9,7 @@ import (
 )
 
 // These bytes come from a second, independent implementation (the short Python in
-// docs/byte-layout.md), not from this codec. A round trip through one implementation only proves
+// docs/golden-bytes.md), not from this codec. A round trip through one implementation only proves
 // that implementation agrees with itself - which is exactly what a byte-order bug does. This is
 // the test that disagrees when the two implementations disagree.
 var golden = []struct {
