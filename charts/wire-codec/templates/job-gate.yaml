@@ -1,0 +1,36 @@
+{{- if .Values.gate.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # The release name is in the name and the chart refuses to reuse it: a gate that runs against the
+  # previous revision's pods is not evidence about this one.
+  name: {{ include "wire-codec.fullname" . }}-gate
+  labels:
+    {{- include "wire-codec.labels" . | nindent 4 }}
+spec:
+  backoffLimit: {{ .Values.gate.backoffLimit }}
+  activeDeadlineSeconds: {{ .Values.gate.activeDeadlineSeconds }}
+  template:
+    metadata:
+      labels:
+        {{- include "wire-codec.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: gate
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["gate"]
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+{{- end }}

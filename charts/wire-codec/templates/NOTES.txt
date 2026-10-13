@@ -1,0 +1,18 @@
+wire-codec is up, decoding {{ .Values.codec }}.
+
+The gate ran as a Job. Whether the four formats agree is not an assertion in a README, it is the
+exit code of that job:
+
+  kubectl -n {{ .Release.Namespace }} logs job/{{ include "wire-codec.fullname" . }}-gate
+  kubectl -n {{ .Release.Namespace }} get job {{ include "wire-codec.fullname" . }}-gate
+
+To send it a frame of your own:
+
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "wire-codec.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }}
+
+{{- if .Values.gate.enabled }}
+To run the gate again after a change:
+
+  kubectl -n {{ .Release.Namespace }} delete job {{ include "wire-codec.fullname" . }}-gate
+  helm upgrade {{ .Release.Name }} . --set codec={{ .Values.codec }}
+{{- end }}

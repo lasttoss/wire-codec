@@ -1,0 +1,36 @@
+# Every value here is something a reader of the chart can change without reading the templates, and
+# nothing here is a secret: the image is public and the wire format is the configuration.
+image:
+  repository: wire-codec
+  tag: dev
+  pullPolicy: IfNotPresent
+
+# The format the reader decodes. The declaration is what makes the four interchangeable, so this is
+# a deployment decision, not a build one.
+codec: byte
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 9100
+
+# The interchange gate as a Job: every codec, every declared message, JSON in and wire out and JSON
+# back, plus the fault cases. backoffLimit 0 on purpose - a gate that retries until it passes is a
+# gate that cannot fail a release.
+gate:
+  enabled: true
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 32Mi
+  limits:
+    cpu: 500m
+    memory: 128Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

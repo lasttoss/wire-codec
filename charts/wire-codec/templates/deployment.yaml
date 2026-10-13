@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wire-codec.fullname" . }}
+  labels:
+    {{- include "wire-codec.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "wire-codec.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "wire-codec.labels" . | nindent 8 }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: listener
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # The command is the binary's own subcommand, not a shell: the image has no shell, so a
+          # mistake here is a crash loop rather than an incident nobody can explain.
+          args: ["listen", "-addr", ":{{ .Values.service.port }}", "-codec", {{ .Values.codec | quote }}]
+          ports:
+            - name: wire
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          # A TCP probe, because the listener has no HTTP endpoint and pretending otherwise would be
+          # a health check that answers for a program that is not the one serving.
+          readinessProbe:
+            tcpSocket:
+              port: wire
+            initialDelaySeconds: 1
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: wire
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

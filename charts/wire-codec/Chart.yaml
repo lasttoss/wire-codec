@@ -1,0 +1,6 @@
+apiVersion: v2
+name: wire-codec
+description: A decoder that speaks the declaration in every wire format, as a service and as a gate
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
