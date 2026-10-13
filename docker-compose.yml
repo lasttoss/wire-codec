@@ -1,0 +1,57 @@
+# The claim of this repository, as something you can watch: one container encodes a message into
+# a format, another decodes it back, and neither of them was compiled for that format - the
+# declaration is what they share.
+#
+#   docker compose up --build --exit-code-from reader
+#
+# CODEC selects the format both sides use: byte (the declared layout), json (the reference).
+# protobuf and FlatBuffers join this lab when their codecs land, and nothing else here changes.
+services:
+  reader:
+    image: wire-codec:dev
+    build: .
+    command: ["listen", "-addr", ":9100", "-codec", "${CODEC:-byte}", "-expect", "2"]
+    read_only: true
+    cap_drop: ["ALL"]
+
+  writer-move:
+    image: wire-codec:dev
+    build: .
+    depends_on: [reader]
+    command:
+      - send
+      - -addr
+      - reader:9100
+      - -codec
+      - "${CODEC:-byte}"
+      - -message
+      - Move
+      - -json
+      - '{"pos":{"x":1.25,"y":-3.5,"z":0,"yaw":90}}'
+    read_only: true
+    cap_drop: ["ALL"]
+
+  writer-say:
+    image: wire-codec:dev
+    build: .
+    depends_on: [reader]
+    command:
+      - send
+      - -addr
+      - reader:9100
+      - -codec
+      - "${CODEC:-byte}"
+      - -message
+      - Say
+      - -json
+      - '{"text":"xin chào"}'
+    read_only: true
+    cap_drop: ["ALL"]
+
+  # The same checks the test suite makes, in the container, so that a green pipeline cannot be
+  # green only on the machine that wrote the code.
+  gate:
+    image: wire-codec:dev
+    build: .
+    command: ["gate"]
+    profiles: ["gate"]

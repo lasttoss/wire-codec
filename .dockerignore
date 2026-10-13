@@ -1,0 +1,5 @@
+.git
+.playwright-mcp
+bin/
+*.md
+docs/

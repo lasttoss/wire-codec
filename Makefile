@@ -1,4 +1,4 @@
-.PHONY: test mutate layout
+.PHONY: test mutate layout image compose gate
 
 test: ## every gate
 	@go vet ./...
@@ -26,3 +26,20 @@ mutate: ## break the codec on purpose; every mutation must be caught
 layout: ## regenerate the byte layout document
 	@go run ./cmd/layout > docs/byte-layout.md
 	@echo "docs/byte-layout.md regenerated"
+
+image: ## build the lab image
+	@docker build -q -t wire-codec:dev .
+
+compose: image ## the interchange lab: two containers, one format (CODEC=byte|json)
+	@CODEC=$${CODEC:-byte} docker compose up --exit-code-from reader --abort-on-container-exit
+
+gate: ## the interchange gate, inside the container
+	@docker compose run --rm --no-deps gate
+
+chart: ## render every branch of the chart and validate it
+	@helm template wire-codec charts/wire-codec | kubeconform -strict -summary /dev/stdin
+	@helm template wire-codec charts/wire-codec --set codec=json | kubeconform -strict -summary /dev/stdin
+
+diagram: ## regenerate the figure and check it against its sources
+	@python3 docs/figures/wire-codec-flow.generator.py
+	@bash ~/.pi/agent/scripts/diagram-freshness.sh 2>/dev/null | grep -E "FRESH|STALE|TOUCHED|NO-META|UNCOMMITTED" | sed 's/^/  /'
