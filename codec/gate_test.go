@@ -8,6 +8,7 @@ import (
 
 	"github.com/lasttoss/wire-codec/codec"
 	"github.com/lasttoss/wire-codec/codec/bytecodec"
+	"github.com/lasttoss/wire-codec/codec/flatbufcodec"
 	"github.com/lasttoss/wire-codec/codec/jsoncodec"
 	"github.com/lasttoss/wire-codec/codec/protocodec"
 	"github.com/lasttoss/wire-codec/internal/schema"
@@ -25,7 +26,7 @@ func loadSchema(t *testing.T) *schema.Schema {
 // allCodecs is the list every format test runs over. A new wire format is added here once and
 // is then held to the same three gates as the others.
 func allCodecs() []codec.Codec {
-	return []codec.Codec{jsoncodec.JSON{}, bytecodec.Byte{}, protocodec.Proto{}}
+	return []codec.Codec{jsoncodec.JSON{}, bytecodec.Byte{}, protocodec.Proto{}, flatbufcodec.Flatbuf{}}
 }
 
 func canonical(t *testing.T, m *schema.Message, doc string) map[string]any {

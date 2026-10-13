@@ -25,6 +25,7 @@ import (
 
 	"github.com/lasttoss/wire-codec/codec"
 	"github.com/lasttoss/wire-codec/codec/bytecodec"
+	"github.com/lasttoss/wire-codec/codec/flatbufcodec"
 	"github.com/lasttoss/wire-codec/codec/jsoncodec"
 	"github.com/lasttoss/wire-codec/codec/protocodec"
 	"github.com/lasttoss/wire-codec/internal/schema"
@@ -32,9 +33,10 @@ import (
 
 func registry() map[string]codec.Codec {
 	return map[string]codec.Codec{
-		"byte":  bytecodec.Byte{},
-		"json":  jsoncodec.JSON{},
-		"proto": protocodec.Proto{},
+		"byte":    bytecodec.Byte{},
+		"json":    jsoncodec.JSON{},
+		"flatbuf": flatbufcodec.Flatbuf{},
+		"proto":   protocodec.Proto{},
 	}
 }
 
