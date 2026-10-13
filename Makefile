@@ -36,9 +36,8 @@ compose: image ## the interchange lab: two containers, one format (CODEC=byte|js
 gate: ## the interchange gate, inside the container
 	@docker compose run --rm --no-deps gate
 
-chart: ## render every branch of the chart and validate it
-	@helm template wire-codec charts/wire-codec | kubeconform -strict -summary /dev/stdin
-	@helm template wire-codec charts/wire-codec --set codec=json | kubeconform -strict -summary /dev/stdin
+chart:  ## lint, render every codec branch, and validate
+	@./scripts/chart-check.sh
 
 diagram: ## regenerate the figure and check it against its sources
 	@python3 docs/figures/wire-codec-flow.generator.py

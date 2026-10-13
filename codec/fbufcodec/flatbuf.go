@@ -8,7 +8,7 @@
 // One honest difference from the byte codec: a FlatBuffers buffer is self-describing, so there is no
 // way to notice bytes appended after it. Trailing-bytes detection exists on the byte wire and on
 // protobuf (as unknown fields) and cannot exist here. Saying so beats pretending.
-package flatbufcodec
+package fbufcodec
 
 import (
 	"encoding/binary"

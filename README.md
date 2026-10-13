@@ -27,8 +27,8 @@ schema/ops.yaml          the only thing you write by hand
 | `byte` codec, from the declaration | **done** |
 | `json` codec (the reference) | **done** |
 | the gates: cross-format equivalence, faults, sizes, golden bytes | **done, and mutation-checked** |
-| `proto` codec | next |
-| `flatbuf` codec | next |
+| `proto` codec, from generated .proto, no protoc | **done** |
+| `flatbuf` codec, read without generated code | **done** |
 | generating `.proto` and `.fbs` for other languages | next |
 
 This table is deliberately not a roadmap: the parts that say "done" are the parts whose tests I

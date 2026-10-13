@@ -1,2 +1,5 @@
 wire-codec
 *.test
+
+# the chart check downloads kubeconform here; a vendored binary is not source
+.cache/

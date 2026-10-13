@@ -1,4 +1,4 @@
-package flatbufcodec_test
+package fbufcodec_test
 
 import (
 	"reflect"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/lasttoss/wire-codec/codec"
-	"github.com/lasttoss/wire-codec/codec/flatbufcodec"
+	"github.com/lasttoss/wire-codec/codec/fbufcodec"
 	"github.com/lasttoss/wire-codec/internal/schema"
 )
 
@@ -59,11 +59,11 @@ func TestRoundTripEveryDeclaredMessage(t *testing.T) {
 		if err != nil {
 			t.Fatalf("%s: canonical: %v", m.Name, err)
 		}
-		wire, err := flatbufcodec.Flatbuf{}.Encode(m, want)
+		wire, err := fbufcodec.Flatbuf{}.Encode(m, want)
 		if err != nil {
 			t.Fatalf("%s: encode: %v", m.Name, err)
 		}
-		back, err := flatbufcodec.Flatbuf{}.Decode(m, wire)
+		back, err := fbufcodec.Flatbuf{}.Decode(m, wire)
 		if err != nil {
 			t.Fatalf("%s: decode: %v", m.Name, err)
 		}
@@ -96,7 +96,7 @@ func TestGarbageIsRefusedNotPanicked(t *testing.T) {
 					t.Errorf("%s: panicked instead of returning an error: %v", name, r)
 				}
 			}()
-			if _, err := (flatbufcodec.Flatbuf{}).Decode(m, b); err == nil {
+			if _, err := (fbufcodec.Flatbuf{}).Decode(m, b); err == nil {
 				t.Errorf("%s: refused to fail", name)
 			}
 		}()
@@ -109,7 +109,7 @@ func TestGeneratedFbsSource(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	text, err := flatbufcodec.Source(m)
+	text, err := fbufcodec.Source(m)
 	if err != nil {
 		t.Fatal(err)
 	}

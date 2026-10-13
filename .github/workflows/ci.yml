@@ -25,3 +25,11 @@ jobs:
         run: |
           go run ./cmd/layout > /tmp/layout.md
           diff -u docs/byte-layout.md /tmp/layout.md
+  # The chart's value surface is small and every value in it is a codec: all four branches are
+  # rendered and validated, so a user cannot set a path nobody tested.
+  chart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - run: ./scripts/chart-check.sh
