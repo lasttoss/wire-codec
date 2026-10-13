@@ -1,0 +1,19 @@
+// generated from the declaration; flatc compiles this for any language
+namespace wire;
+
+table Pos { x:double; y:double; z:double; yaw:double; }
+
+table Everything {
+  a_u8:ubyte;
+  a_i16:short;
+  a_u16:ushort;
+  a_i32:int;
+  a_u32:uint;
+  a_bool:bool;
+  a_metres:double;
+  a_deg:double;
+  a_str:string;
+  a_raw:[ubyte];
+}
+
+root_type Everything;

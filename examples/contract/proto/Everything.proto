@@ -1,0 +1,17 @@
+// generated from the declaration by cmd/contract; edit schema/ops.yaml, not this
+syntax = "proto3";
+
+message Pos { double x = 1; double y = 2; double z = 3; double yaw = 4; }
+
+message Everything {
+  uint32 a_u8 = 1;
+  int32 a_i16 = 2;
+  uint32 a_u16 = 3;
+  int32 a_i32 = 4;
+  uint32 a_u32 = 5;
+  bool a_bool = 6;
+  double a_metres = 7;
+  double a_deg = 8;
+  string a_str = 9;
+  bytes a_raw = 10;
+}

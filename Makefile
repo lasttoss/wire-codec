@@ -1,4 +1,4 @@
-.PHONY: test mutate layout image compose gate
+.PHONY: test mutate contract layout image compose gate chart diagram
 
 test: ## every gate
 	@go vet ./...
@@ -22,6 +22,9 @@ mutate: ## break the codec on purpose; every mutation must be caught
 	  if [ "$$n" -eq 0 ]; then echo "GATE IS BLIND: $$m"; exit 1; fi; \
 	  echo "caught ($$n failures): $$(echo "$$m" | cut -c1-60)..."; \
 	done
+
+contract: ## regenerate the client-side artefacts (.proto, .fbs, fixtures)
+	@go run ./cmd/contract
 
 layout: ## regenerate the byte layout document
 	@go run ./cmd/layout > docs/byte-layout.md

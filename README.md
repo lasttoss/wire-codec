@@ -29,11 +29,54 @@ schema/ops.yaml          the only thing you write by hand
 | the gates: cross-format equivalence, faults, sizes, golden bytes | **done, and mutation-checked** |
 | `proto` codec, from generated .proto, no protoc | **done** |
 | `flatbuf` codec, read without generated code | **done** |
-| generating `.proto` and `.fbs` for other languages | next |
+| generating `.proto` and `.fbs` for other languages (`make contract`) | **done** |
+| the client-side TypeScript mirror of the contract | **done, and checked for drift** |
 | the figure (`docs/figures/wire-codec-flow.html`, generated) | **done, and checked against its sources** |
 
 This table is deliberately not a roadmap: the parts that say "done" are the parts whose tests I
 have seen fail for the right reason (`make mutate`).
+
+## What this demonstrates
+
+- Declaring a wire protocol once and generating three formats from it, behind an interface
+  (`Codec`) that keeps game logic away from bytes.
+- A cross-format gate that is measured rather than asserted: 21 checks over 5 cases, the faults each
+  format has to refuse, and golden bytes produced by a second, independent implementation.
+- Emitting the client-side artefacts (`wire.proto`, `wire.fbs`, canonical fixtures) from the same
+  declaration, so the contract has one author and several readers.
+- Keeping a hand-written client mirror honest with a test instead of a review.
+- Choosing a format by measurement: the same `Move` is 8 bytes on the declared layout, 29 as
+  protobuf, 64 as FlatBuffers and 56 as JSON.
+
+## Repository standard
+
+```bash
+make test       # vet, unit tests, and the golden bytes from the second implementation
+make mutate     # break the codec on purpose; every mutation has to make the suite red
+make contract   # regenerate examples/contract (drift fails the test suite in CI)
+make gate       # the interchange gate, in the container
+make chart      # lint, render every codec branch, validate with kubeconform
+make diagram    # regenerate the figure and check it against its declared sources
+```
+
+## The client side of the contract
+
+`make contract` writes the files a client team compiles with its own toolchain:
+
+```
+examples/contract/proto/Move.proto     protoc / protobuf-ts / any protobuf runtime
+examples/contract/fbs/Move.fbs         flatc, any language
+examples/contract/documents.json       the canonical JSON for every declared message
+examples/ts-client/contract.ts         the mirror a client engineer reads and edits
+```
+
+The `.proto` and `.fbs` are generated; editing them is editing the wrong file. The TypeScript is
+hand-written, because it is the file a client team reads and argues with, and it is checked by
+`TestTypescriptMirrorsTheDeclaration`: a declared message or field it does not mention fails the
+suite. `TestDocumentsSurviveEveryCodec` then puts each fixture through all four codecs, so a
+fixture only the JSON codec could read fails here rather than at the client.
+
+I do not write the client. I write the contract, and the tests that say it is still the contract.
 
 ## Why three, and why one interface
 

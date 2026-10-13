@@ -1,0 +1,53 @@
+[
+  {
+    "message": "Move",
+    "opcode": 1,
+    "json": {
+      "pos": {
+        "x": 1.25,
+        "y": -3.5,
+        "yaw": 90.0013733119707,
+        "z": 0
+      }
+    }
+  },
+  {
+    "message": "SetColor",
+    "opcode": 2,
+    "json": {
+      "b": 255,
+      "g": 2,
+      "r": 1
+    }
+  },
+  {
+    "message": "Ready",
+    "opcode": 6,
+    "json": {
+      "ready": true
+    }
+  },
+  {
+    "message": "Say",
+    "opcode": 9,
+    "json": {
+      "text": "xin chào"
+    }
+  },
+  {
+    "message": "Everything",
+    "opcode": 20,
+    "json": {
+      "a_bool": true,
+      "a_deg": 45.50057221332112,
+      "a_i16": -300,
+      "a_i32": -70000,
+      "a_metres": 12.34,
+      "a_raw": "AQIDBA==",
+      "a_str": "everything",
+      "a_u16": 40000,
+      "a_u32": 3000000000,
+      "a_u8": 7
+    }
+  }
+]

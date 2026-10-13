@@ -1,0 +1,8 @@
+// generated from the declaration by cmd/contract; edit schema/ops.yaml, not this
+syntax = "proto3";
+
+message Pos { double x = 1; double y = 2; double z = 3; double yaw = 4; }
+
+message Say {
+  string text = 1;
+}

@@ -127,7 +127,7 @@ JSONC = Block("json", "the reference the others are held to", [
 # --- column 3: what keeps them interchangeable ------------------------------
 GATE = Block("the interchange gate", "go run ./cmd/wirecodec gate", [
     ("21 checks, 0 failed", True),
-    ("4 codecs x 5 messages: JSON in, wire out,", False),
+    ("4 codecs x 5 cases: JSON in, wire out,", False),
     ("wire back in, JSON out, same value", False),
     ("refused, not guessed: a truncated frame,", False),
     ("trailing bytes, an unknown protobuf field,", False),

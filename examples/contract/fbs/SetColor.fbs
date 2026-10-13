@@ -1,0 +1,12 @@
+// generated from the declaration; flatc compiles this for any language
+namespace wire;
+
+table Pos { x:double; y:double; z:double; yaw:double; }
+
+table SetColor {
+  r:ubyte;
+  g:ubyte;
+  b:ubyte;
+}
+
+root_type SetColor;
