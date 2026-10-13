@@ -64,7 +64,7 @@ point of one declaration is that you can *measure* that trade instead of arguing
    for any of these is the failure this repository exists to prevent.
 3. **Values that do not fit are refused, not clamped.** 400 metres is not 327.67 metres.
 4. **Golden bytes from a second implementation.** The bytes in `codec/golden_test.go` were produced
-   by the short Python in `docs/byte-layout.md`, not by this code. A round trip through one
+   by the short Python in `docs/golden-bytes.md`, not by this code. A round trip through one
    implementation proves only that implementation agrees with itself - which is precisely what a
    byte-order bug does. This test is the one that disagrees. It has already caught a real bug:
    `a_raw` arriving as base64 and being encoded as the eight characters of its own spelling.
