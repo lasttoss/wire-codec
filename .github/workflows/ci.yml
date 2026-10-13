@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - run: go vet ./...
+      - run: go test ./... -count=1
+      # The two gates that make the others believable: every mutation below is a plausible
+      # mistake, and each one has to make the suite red. A gate nobody has seen fail is a gate
+      # nobody can trust.
+      - name: the gate bites (mutations must be caught)
+        run: make mutate
+      # The byte layout document is generated from the declaration, so a change to the
+      # declaration that nobody regenerated the document for fails here.
+      - name: the documents match the declaration
+        run: |
+          go run ./cmd/layout > /tmp/layout.md
+          diff -u docs/byte-layout.md /tmp/layout.md

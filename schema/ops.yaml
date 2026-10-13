@@ -1,0 +1,42 @@
+# The single declaration. Everything else in this repository is derived from this file:
+# the byte layout, the .proto, the .fbs, and the markdown table in docs/.
+#
+# Types are logical: `metres` and `deg` are what a game client thinks in. Each wire format
+# quantises them its own way, and the canonical form every codec agrees on is the BYTE
+# wire's resolution (1 cm, 1/65535 of a turn) - that is the smallest of the three, so
+# nothing is lost by comparing there.
+messages:
+  Move:
+    opcode: 1
+    fields:
+      - {name: pos, type: pos}
+  SetColor:
+    opcode: 2
+    fields:
+      - {name: r, type: u8}
+      - {name: g, type: u8}
+      - {name: b, type: u8}
+  Ready:
+    opcode: 6
+    fields:
+      - {name: ready, type: bool}
+  Say:
+    opcode: 9
+    fields:
+      - {name: text, type: str}
+  # Every declared type in one message, so that a wire-type bug has somewhere to show up. The
+  # golden test asserts that every message declared here has a case, which is how this message
+  # stops being optional.
+  Everything:
+    opcode: 20
+    fields:
+      - {name: a_u8, type: u8}
+      - {name: a_i16, type: i16}
+      - {name: a_u16, type: u16}
+      - {name: a_i32, type: i32}
+      - {name: a_u32, type: u32}
+      - {name: a_bool, type: bool}
+      - {name: a_metres, type: metres}
+      - {name: a_deg, type: deg}
+      - {name: a_str, type: str}
+      - {name: a_raw, type: raw}
