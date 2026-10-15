@@ -1,5 +1,7 @@
 # wire-codec
 
+[![ci](https://github.com/lasttoss/wire-codec/actions/workflows/ci.yml/badge.svg)](https://github.com/lasttoss/wire-codec/actions/workflows/ci.yml)
+
 One declaration, three wire formats, and the tests that make them interchangeable.
 
 A game server's wire format is usually a decision you cannot revisit: the client shipped, the
